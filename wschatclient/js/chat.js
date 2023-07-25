@@ -1,4 +1,3 @@
-import WsClient from "./socket.js";
 import Message from "./message.js";
 
 class ChatForm {
@@ -154,8 +153,7 @@ class Alert {
     }
 }
 
-window.addEventListener('load', function(e){
-    let wsClient = new WsClient();
-    let chatForm = new ChatForm(wsClient);
-    let chatMessageBox = new ChatMessageBox(wsClient);
-});
+export {
+    ChatForm,
+    ChatMessageBox
+};

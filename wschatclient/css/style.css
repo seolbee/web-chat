@@ -2,8 +2,13 @@
     margin: 0;
     padding: 0;
     box-sizing:border-box;
-    color: black;
+    color: #222831;
     outline: none;
+}
+
+input {
+    border: none;
+    background: none;
 }
 
 body{
@@ -84,7 +89,71 @@ body{
     padding: 5px 0;
 }
 
-.chat-form > .buttons{
+.chat-form > .buttons {
     display: flex;
     justify-content: space-between;
+}
+
+.popup-background {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-background.login {
+    background-color: #00ADB5;
+}
+
+.login-popup {
+    background-color: #EEEEEE;
+    width: 400px;
+    height: 300px;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.login-popup > p {
+    font-size: 25px;
+    text-align: center;
+}
+
+.login-form {
+    padding: 20px 0;
+    width: 100%;
+}
+
+.input-box {
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+    border: 1px solid #bbb;
+    transition: all 0.5s;
+}
+
+.input-box.active{
+    border: 2px solid #00ADB5;
+}
+
+.input-box > label {
+    font-size: 16px;
+    color: #888;
+    background-color: #eee;
+    position: absolute;
+    transition: all 0.5s;
+}
+
+.input-box.active > label{
+    top: -18px;
+    color: #00ADB5;
+    font-size: 14px;
+    padding: 5px;
+}
+
+.input-box > input {
+    font-size: 16px;
 }

@@ -7,6 +7,8 @@
    <script src="./js/socket.js" type="module"></script>
    <script src="./js/message.js" type="module"></script>
    <script src="./js/chat.js" type="module"></script>
+   <script src="./js/login.js" type="module"></script>
+   <script src="./js/index.js" type="module"></script>
    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
@@ -28,7 +30,16 @@
             </form>
         </div>
     </div>
-    <div class="popup-background">
+    <div class="popup-background login">
+        <div class="login-popup">
+            <p>Web Chat Window</p>
+            <form class="login-form">
+                <div class="input-box">
+                    <label for="userId">userId</label>
+                    <input type="text" id="userId">
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
