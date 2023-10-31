@@ -28,7 +28,9 @@ class ChatForm {
             return false;
         }
 
-        let data = new ChatMessage(message, "", "chat");
+        let user = JSON.parse(sessionStorage.getItem('user'));
+
+        let data = new ChatMessage(message, user.userName, "chat");
 
         this.wsClient.send(data);
 
@@ -51,6 +53,7 @@ class ChatMessageBox {
 
     init(wsClient){
         this.messageListEl = document.querySelector(".message-list");
+        this.outBtn = document.querySelector(".out-btn");
         this.wsClient = wsClient;
         this.messageList = [];
 
@@ -59,13 +62,15 @@ class ChatMessageBox {
 
     addEvent(){
         this.wsClient.setMessageEvent(this.delivery);
+        this.outBtn.addEventListener('click', this.outChat.bind(this));
     }
 
     delivery = (data) => {
         // let {message, sender, type} = JSON.parse(data.data);
-        data = JSON.parse(data.data);
+        let body = JSON.parse(data.data);
         // let chatMessage = new ChatMessage(message, sender, type);
-        let message = this.messageBuilder(data);
+        let message = this.messageBuilder(body);
+        if(!message) return false;
         this.messageList.push(message);
         this.render();
     }
@@ -77,10 +82,11 @@ class ChatMessageBox {
             let {userName, type} = data;
             message = new SystemMessage(userName, type);
         } else if(data.type === 'chat') {
-            let {message:msg, sender, type} = data;
-            message = new ChatMessage(msg, sender, type);
+            let {message:msg, sender, type, isMine} = data;
+            message = new ChatMessage(msg, sender, type, isMine);
         } else {
-            return false;
+            console.error("채팅 메시지 오류");
+            message = false;
         }
     
         return message;
@@ -93,18 +99,26 @@ class ChatMessageBox {
 
         this.messageListEl.append(...messageDom);
     }
+
+    outChat(){
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        this.wsClient.send({userName: user.userName, type:"leave"});
+        window.location.reload();
+    }
 }
 
 class ChatMessage extends Message {
-    constructor(message, sender, type){
+    constructor(message, sender, type, isMine){
         super(type);
 
         this.message = message;
         this.sender = sender;
+        this.isMine = isMine;
     }
 
     getTemplate(){
-        return `<div class="chat-message">
+        return `<div class="chat-message ${this.isMine ? 'mine' : 'thine'}">
+                    ${!this.isMine ? '<p class="message-title">'+ this.sender +'</p>' : ''}
                     <p class="message-content">${this.message}</p>
                 </div>`;
     }

@@ -14,13 +14,12 @@ class WsClient{
     }
 
     addEvent(){
-        this.ws.addEventListener("open", this.join);
+        this.ws.addEventListener("open", (e) => console.log(e));
         this.ws.addEventListener("error", (e) => console.error(e));
         this.ws.addEventListener("close", (e) => console.log(e));
     }
 
-    join = () => {
-        let user = {userName: '조한슬', type: 'join'};
+    join(user) {
         this.send(user);
     }
 

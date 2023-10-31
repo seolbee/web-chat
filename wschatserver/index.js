@@ -1,40 +1,70 @@
 const { WebSocketServer, WebSocket } = require('ws');
+const express = require('express');
 const dotenv = require('dotenv');
-// const { Kafka } = require("kafkajs");
+const cors = require('cors');
+const User = require('./model/user');
+// const bodyParser = require('body-parser');
 dotenv.config();
+
 let users = [];
 
+const app = express();
+app.use(cors());
+
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+
+app.post('/signin', function(req, res) {
+    let foundIdx = users.findIndex(e => e.userName == req.body.userName);
+    if(foundIdx > -1) {
+        throw new Error('이미 존재하는 ID입니다. 다른 아이디로 다시 접속해주세요.');
+    } else {
+        let user = new User(req.body.userName, req.headers.referer);
+        users.push(user);
+        res.json({"message" : "접속합니다.", "success" : true});
+    }
+});
+
+app.use( function (err, req, res, next) {
+    console.error(err);
+    res.status(500);
+    res.json({message: err.message});
+});
+app.listen(8080);
+
 const wss = new WebSocketServer( { port: 9090 } );
-// const kafka = new Kafka({
-//     brokers: ['popular-insect-7808-us1-kafka.upstash.io:9092'],
-//     sasl: {
-//       mechanism: 'scram-sha-256',
-//       username: 'cG9wdWxhci1pbnNlY3QtNzgwOCTauBof4nDngrrBXNy5h227Fd99BVRACmFZu3c',
-//       password: '7b8004e29da444edb7a5a36d53d6dfd4',
-//     },
-//     ssl: true,
-// });
 
-// const producer = kafka.producer();
+wss.on("connection", (ws) => {
 
-wss.on("connection", (ws, request, client) => {
-    // producer.connect();
-    ws.on("error", (error) => console.error(error));
+    ws.on("open", (e) => {
+        console.log(e);
+    });
+
+    ws.on("error", (error) => {
+        ws.send(JSON.stringify({"message" : error.message}));
+    });
 
     ws.on("message", (data) => {
         let message = JSON.parse(data);
-        console.log(message);
-
+        console.log(typeof message);
         if(message.type === 'join'){
-            users.push(message.userName);
         } else if(message.type === 'leave'){
-            users = users.splice(message.userName, 1);
+            users = users.filter((e) => e.userName != message.userName);
+            ws.close();
         }
 
         wss.clients.forEach( (client) => {
             if(client.readyState === WebSocket.OPEN){
-                client.send(JSON.stringify(message));
+                client.send(JSON.stringify({...message, isMine : client === ws}));
             }
-        })
+        });
     });
+
+    ws.on("close", () => {
+        ws.terminate();
+    });
+});
+
+wss.on("close", () => {
+    users.clear();
 });
