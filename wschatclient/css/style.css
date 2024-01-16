@@ -197,3 +197,58 @@ button {
 .input-box > input {
     font-size: 16px;
 }
+
+.alert {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    min-width: 100px;
+    padding: 15px 20px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.alert-info {
+    background-color: #c9deff;
+}
+
+.alert-error {
+    background-color: rgb(255, 219, 219);
+}
+
+.alert-body{
+    display: flex;
+    align-items: center;
+}
+
+.alert-icon{
+    margin-right: 20px;
+}
+
+.alert-icon > i {
+    font-size: 30px;
+}
+
+.alert-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.alert-info .alert-title {
+    color: #002a6d;
+}
+
+.alert-content {
+    font-size: 13px;
+}
+
+.alert-close > p {
+    cursor:pointer;
+    font-size : 30px;
+}

@@ -25,11 +25,19 @@ app.post('/signin', function(req, res) {
     }
 });
 
-app.use( function (err, req, res, next) {
-    console.error(err);
+app.use(function (err, req, res, next) {
+    // console.error(err);
+    let response = {};
+
     res.status(500);
-    res.json({message: err.message});
+
+    response.status = 500;
+    response.message = err.message;
+    console.error(response);
+
+    res.json(response);
 });
+
 app.listen(8080);
 
 const wss = new WebSocketServer( { port: 9090 } );
@@ -46,7 +54,7 @@ wss.on("connection", (ws) => {
 
     ws.on("message", (data) => {
         let message = JSON.parse(data);
-        console.log(typeof message);
+
         if(message.type === 'join'){
         } else if(message.type === 'leave'){
             users = users.filter((e) => e.userName != message.userName);
