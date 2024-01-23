@@ -55,7 +55,6 @@ class Alert {
 class AlertBuilder {
     alertList = [];
     limit = 100;
-    // isCreate = true;
     
     createAlert(alertObject){
         let alert = null;
@@ -77,6 +76,26 @@ class AlertBuilder {
 
     isCreateAlert(){
         return this.alertList.length < this.limit;
+    }
+
+    errorAlert(alertObject){
+        let obj = {state: AlertType.ERROR, ...alertObject};
+        this.createAlert(obj);
+    }
+
+    infoAlert(alertObject){
+        let obj = {state: AlertType.INFO, ...alertObject};
+        this.createAlert(obj);
+    }
+
+    successAlert(alertObject){
+        let obj = {state: AlertType.SUCCESS, ...alertObject};
+        this.createAlert(obj);
+    }
+
+    warningAlert(alertObject){
+        let obj = {state: AlertType.WRANING, ...alertObject};
+        this.createAlert(obj);
     }
 };
 

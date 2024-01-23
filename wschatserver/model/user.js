@@ -1,4 +1,4 @@
-class User {
+export class User {
     _userName;
     _host;
 
@@ -20,5 +20,3 @@ class User {
         return this._host;
     }
 }
-
-module.exports = User;

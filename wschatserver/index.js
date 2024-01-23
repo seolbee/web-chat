@@ -1,29 +1,19 @@
-const { WebSocketServer, WebSocket } = require('ws');
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const User = require('./model/user');
+import { WebSocketServer, WebSocket } from 'ws';
+import express, { urlencoded, json } from 'express';
+import { config } from 'dotenv';
+import cors from 'cors';
+import {router, users} from './routes/main.controller.js';
 // const bodyParser = require('body-parser');
-dotenv.config();
+config();
 
-let users = [];
+import {app} from './firebase';
 
 const app = express();
 app.use(cors());
 
-app.use(express.urlencoded({extended: false}));
-app.use(express.json());
-
-app.post('/signin', function(req, res) {
-    let foundIdx = users.findIndex(e => e.userName == req.body.userName);
-    if(foundIdx > -1) {
-        throw new Error('이미 존재하는 ID입니다. 다른 아이디로 다시 접속해주세요.');
-    } else {
-        let user = new User(req.body.userName, req.headers.referer);
-        users.push(user);
-        res.json({"message" : "접속합니다.", "success" : true});
-    }
-});
+app.use(urlencoded({extended: false}));
+app.use(json());
+app.use("/", router);
 
 app.use(function (err, req, res, next) {
     // console.error(err);
