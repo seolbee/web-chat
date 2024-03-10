@@ -156,23 +156,6 @@ class SystemMessage extends Message {
     }
 }
 
-class Alert {
-    content = "";
-    title = "";
-    STATE = "";
-    duration = 2000;
-
-    setAlert(state, title, content){
-        this.state = state;
-        this.title = title;
-        this.content = content;
-    }
-
-    getTemplate(){
-        return `<div></div>`;
-    }
-}
-
 export {
     ChatForm,
     ChatMessageBox
