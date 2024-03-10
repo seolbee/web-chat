@@ -2,6 +2,17 @@ const { WebSocketServer, WebSocket } = require('ws');
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, "/file");
+    },
+    filename: function(req, file, cb){
+        cb(null, file.filename + "-" + Date.now());
+    }
+});
+const uploadFile = multer({storage});
+
 const User = require('./model/user');
 // const bodyParser = require('body-parser');
 dotenv.config();
@@ -14,8 +25,8 @@ app.use(cors());
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
-app.post('/signin', function(req, res) {
-    let foundIdx = users.findIndex(e => e.userName == req.body.userName);
+app.post('/sign-in', function(req, res) {
+    let foundIdx = users.findIndex(e => e.userName === req.body.userName);
     if(foundIdx > -1) {
         throw new Error('이미 존재하는 ID입니다. 다른 아이디로 다시 접속해주세요.');
     } else {
@@ -23,6 +34,10 @@ app.post('/signin', function(req, res) {
         users.push(user);
         res.json({"message" : "접속합니다.", "success" : true});
     }
+});
+
+app.post('/upload', uploadFile.single("file"), function(req, res) {
+    return res.json({"success" : true, "message" : "업로드 완료"});
 });
 
 app.use( function (err, req, res, next) {
@@ -46,7 +61,6 @@ wss.on("connection", (ws) => {
 
     ws.on("message", (data) => {
         let message = JSON.parse(data);
-        console.log(typeof message);
         if(message.type === 'join'){
         } else if(message.type === 'leave'){
             users = users.filter((e) => e.userName != message.userName);

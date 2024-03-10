@@ -11,6 +11,10 @@ input {
     background: none;
 }
 
+input[type='file']{
+    display: none;
+}
+
 body{
     width: 100vw;
     height: 100vh;
@@ -132,6 +136,10 @@ button {
 .chat-form > .buttons {
     display: flex;
     justify-content: space-between;
+}
+
+.chat-form > .more-menu {
+    background-color: #ffffff;
 }
 
 .popup-background {

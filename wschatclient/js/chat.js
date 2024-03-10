@@ -11,6 +11,7 @@ class ChatForm {
     init(wsClient){
         this.chatForm = document.querySelector(".chat-form");
         this.messageInput = this.chatForm.querySelector("input");
+        this.fileoUploadInput = document.querySelector("#imageFile");
         this.wsClient = wsClient;
 
         this.addEvent();
@@ -18,6 +19,7 @@ class ChatForm {
 
     addEvent(){
         this.chatForm.addEventListener("submit", this.submit.bind(this));
+        this.fileoUploadInput.addEventListener("change", this.uploadFile.bind(this));
     }
 
     submit = (e) => {
@@ -35,6 +37,10 @@ class ChatForm {
         this.wsClient.send(data);
 
         this.reset();
+    }
+
+    uploadFile(e){
+        
     }
 
     reset(){
